@@ -4,8 +4,8 @@ import requests
 from twilio.rest import Client
 import time
 
-account_sid = 'AC2545f544a25ce13a4ba0b2d0656f1c0f'
-auth_token = '7903eb1b5c728a22788245e6f22e527f'
+account_sid = 'Insert account_sid here'
+auth_token = 'Insert auth_token here'
 client = Client(account_sid, auth_token)
 url = "https://news.delta.com/where-delta-flying-june-updated"
 count = 0
@@ -13,30 +13,27 @@ count = 0
 def call():
     client.calls.create(
         url='http://demo.twilio.com/docs/voice.xml',
-        to='+18322788815',
-        from_='+12055095558'
+        to='insert number to call',
+        from_='insert number to make the call'
     )
     print("called")
 
 
 web = requests.get(url, timeout=10)
 doc = html.fromstring(web.content)
+
+# tracks three airlines to China: from Detroit through Seoul; from Detroit to ShangHai; From Seattle to Seoul
 detroit_seoul = doc.xpath("//*[@id=\"block-dnh-content\"]/div/div/div/div[1]/ul[6]/li[1]/p")[0]
 detroit_seoul = tostring(detroit_seoul)
 detroit_shang = doc.xpath("//*[@id=\"block-dnh-content\"]/div/div/div/div[1]/ul[6]/li[2]/p")[0]
 detroit_shang = tostring(detroit_shang)
 seattle_seoul = doc.xpath("//*[@id=\"block-dnh-content\"]/div/div/div/div[1]/ul[6]/li[3]/p")[0]
 seattle_seoul = tostring(seattle_seoul)
-# seattle_shang = doc.xpath("//*[@id=\"block-dnh-content\"]/div/div/div/div[1]/ul[6]/li[4]/p")[0]
-# seattle_shang = tostring(seattle_shang)
+
+# tracks China-America policy updates
 notice = doc.xpath("//*[@id=\"block-dnh-content\"]/div/div/div/div[1]/p[12]")[0]
 notice = tostring(notice)
-print(web.content)
-print(detroit_seoul)
-print(detroit_shang)
-print(seattle_seoul)
-# print(seattle_shang)
-print(notice)
+
 start_time = time.time()
 while 1:
     while 1:
@@ -90,19 +87,6 @@ while 1:
         call()
         break
 
-    # while 1:
-    #     try:
-    #         seattle_shang_latest = tostring(doc.xpath("//*[@id=\"block-dnh-content\"]/div/div/div/div[1]/ul[6]/li[4]/p")[0])
-    #         break
-    #     except IndexError:
-    #         time.sleep(0.1)
-    #         with open("log.txt","a") as file:
-    #             print("Error getting seattle_shang_latest. Last known value is:", seattle_shang_latest, "\nRetrying...")
-    #             file.write(time.strftime("%H:%M:%S", time.localtime())+"\nError getting seattle_shang_latest. Last known value is: "+seattle_shang_latest)
-    # if seattle_shang != seattle_shang_latest:
-    #     print("Original: ", seattle_shang, "New: ", seattle_shang_latest)
-    #     call()
-    #     break
 
     while 1:
         try:
@@ -119,4 +103,5 @@ while 1:
         break
 
     current = time.strftime("%H:%M:%S", time.localtime())
+    # prints record time
     print(current, "--- %s seconds ---" % (time.time() - start_time))
